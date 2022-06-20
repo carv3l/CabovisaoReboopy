@@ -3,7 +3,7 @@ from selenium.webdriver.chrome.options import Options
 
 
 
-time = 60
+time = 120
 options = Options()
 #options.set_headless()
 options.add_argument("start-maximized")
