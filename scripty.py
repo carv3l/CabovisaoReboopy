@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
 
+var_ip = '192.168.1.1'
 
 time = 120
 options = Options()
@@ -9,7 +10,7 @@ options = Options()
 options.add_argument("start-maximized")
 options.binary_location=r'C:\Users\Dário Ribeiro\AppData\Local\Vivaldi\Application\vivaldi.exe'
 driver = webdriver.Chrome(executable_path=r'C:\Users\Dário Ribeiro\Downloads\chromedriver_win32\chromedriver.exe', options=options)
-driver.get('http://192.168.1.1')
+driver.get('http://'+var_ip)
 
 driver.implicitly_wait(time)
 username = driver.find_element_by_name('loginUsername')
