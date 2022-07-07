@@ -8,7 +8,7 @@ from selenium.webdriver.common.keys import Keys
 
 var_ip = '192.168.1.1'
 
-time = 30
+time = 60
 #options = Options()
 #options.add_argument("--headless")
 #options.add_argument("start-maximized")
@@ -39,17 +39,13 @@ driver.implicitly_wait(time)
 
 NEXT_BUTTON_XPATH = '//input[@type="submit" and @value="Reboot"]'
 
-button = driver.find_element("xpath",NEXT_BUTTON_XPATH)
-button.click()
+#button = driver.find_element("xpath",NEXT_BUTTON_XPATH)
+#button.click()
 
 driver.implicitly_wait(time)
 
-obj = driver.switch_to.alert
+#Close browser
+driver.close()
 
-#Retrieve the message on the Alert window
-msg=obj.text
-print ("Alert shows following message: "+ msg )
-
-driver.implicitly_wait(time)
-#use the accept() method to accept the alert
-obj.accept()
+# Quit Browser
+#driver.quit()
