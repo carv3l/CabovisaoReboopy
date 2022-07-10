@@ -49,17 +49,23 @@ def reboot():
     password.submit()
 
     driver.implicitly_wait(delay_time)
+
+    # Goes to the basic page of the hotbox /RgSetup.asp
     driver.find_element("link text","Basic").click()
+
     driver.implicitly_wait(delay_time)
 
+    # Get the html element of the button reboot of type = submit
     NEXT_BUTTON_XPATH = '//input[@type="submit" and @value="Reboot"]'
-
+    
+    # Click Action of the Reboot Button on the basic page /RgSetup.asp
     button = driver.find_element("xpath",NEXT_BUTTON_XPATH)
     button.click()
+
     driver.implicitly_wait(delay_time)
     #Close browser
     driver.close()
-    
+
     # Get current time for the log
     current_date = datetime.datetime.now()
     report('reboot',current_date)
