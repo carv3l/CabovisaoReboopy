@@ -59,6 +59,8 @@ def reboot():
     driver.implicitly_wait(delay_time)
     #Close browser
     driver.close()
+    
+    # Get current time for the log
     current_date = datetime.datetime.now()
     report('reboot',current_date)
 
