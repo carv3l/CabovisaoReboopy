@@ -23,12 +23,12 @@ previous_timestamp = ""
 #serv = Service(path)
 #driver = webdriver.Firefox(service=serv, options=options)
 
-def report(action,timestamp):
+def report(action,current_time):
     f = open("logs/reboopy.log", "a")
     if action == "reboot":
-        f.write("Reboot Performed at:" + timestamp + " for more information, see Geckodriver.log on parent folder")
+        f.write("Reboot Performed at: " + str(current_time) + " - For more information on the reboot, see Geckodriver.log on parent folder \n")
     if action == "reset":
-        f.write("Reset Performed at:" + timestamp + " for more information, see Geckodriver.log on parent folder")
+        f.write("Reset Performed at: " + str(current_time) + " - For more information on the reboot, see Geckodriver.log on parent folder \n")
     f.close()
 
 
