@@ -1,5 +1,3 @@
-from ast import If
-from typing import Tuple
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import datetime
