@@ -1,3 +1,4 @@
+from tkinter import SW
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import datetime
@@ -14,7 +15,7 @@ var_ip = '192.168.1.1'
 
 hours_to_apply_reboot = ['7:0:0','13:20:0','20:2:0']
 
-hours_to_apply_reset = ['5:0:0']
+hours_to_apply_reset = ['5:0:0','5:0:0']
 
 delay_time = 3600
 
@@ -34,7 +35,7 @@ def report(action,current_time):
     f.close()
 
 
-def reboot():
+def perform_action(action):
     driver = webdriver.Firefox(executable_path="./drivers/geckodriver")
     #driver.implicitly_wait(delay_time)
     driver.get('http://'+var_ip)
@@ -59,15 +60,47 @@ def reboot():
 
     # Get the html element of the button reboot of type = submit
 
-    NEXT_BUTTON_XPATH = '//input[@type="submit" and @value="Reboot"]'
+    REBOOT_BUTTON_XPATH = '//input[@type="submit" and @value="Reboot"]'
+
+    RADIO_BUTTON_XPATH = '//input[@type="radio" and @name="RestoreFactoryYes1" and @value="0x01"]'
+
+    APPLY_BUTTON_XPATH = '//input[@type="submit" and @value="Apply"]'
+
+
+    if(action == "reboot"):
+         # Click Action of the Reboot Button on the basic page /RgSetup.asp
+
+        button = driver.find_element("xpath",REBOOT_BUTTON_XPATH)
+        button.click()
+
+        # Handle Alert of rebooting
+
+        WebDriverWait(driver, 10).until(EC.alert_is_present())
+        driver.switch_to.alert.accept()
+
+
+
+    if( action == "reset"):
+        # Click Action of the Radio Restore Button on the basic page /RgSetup.asp
+
+        button = driver.find_element("xpath",RADIO_BUTTON_XPATH)
+        button.click()
+
+        # Handle Message Alert of resetting
+
+        WebDriverWait(driver, 10).until(EC.alert_is_present())
+        driver.switch_to.alert.accept() 
+
+        driver.implicitly_wait(delay_time)
+
+        # Click Action of the Apply Button on the basic page /RgSetup.asp
+
+        button = driver.find_element("xpath",APPLY_BUTTON_XPATH)
+        button.click()
+
     
-    # Click Action of the Reboot Button on the basic page /RgSetup.asp
-
-    button = driver.find_element("xpath",NEXT_BUTTON_XPATH)
-    button.click()
-
-    WebDriverWait(driver, 10).until(EC.alert_is_present())
-    #driver.switch_to.alert.accept()
+   
+    
 
 
     driver.implicitly_wait(delay_time)
@@ -76,7 +109,9 @@ def reboot():
 
     # Get current time for the log
     current_date = datetime.datetime.now()
-    report('reboot',current_date)
+
+    # action argument is either reboot or reset
+    report(action,current_date)
 
 
 
@@ -93,16 +128,16 @@ while True:
     
     if current_timestamp != previous_timestamp:
 
-        if (MINUTE in [0,15,25,30,45,55]) and (SECONDS in [0,15,25,30,45,55]):
+        if (MINUTE in [0,15,25,30,45,55]) and (SECONDS in [0]):
             print(current_timestamp)
 
         if current_timestamp in hours_to_apply_reboot:
             print("Reboot time")
-            reboot()
+            perform_action("reboot")
 
         if current_timestamp in hours_to_apply_reset:
             print("Reset time")
-           # reboot()
+            perform_action("reset")
     
     previous_timestamp = current_timestamp
 
