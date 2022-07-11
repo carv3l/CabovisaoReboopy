@@ -1,6 +1,8 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import datetime
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 #from datetime import datetime
 #from selenium.webdriver.firefox.options import Options
 #from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
@@ -10,11 +12,11 @@ import datetime
 
 var_ip = '192.168.1.1'
 
-hours_to_apply_reboot = ['7:0:0','13:20:0','20:2:0','16:5:0']
+hours_to_apply_reboot = ['7:0:0','13:20:0','20:2:0']
 
 hours_to_apply_reset = ['5:0:0']
 
-delay_time = 60
+delay_time = 3600
 
 previous_timestamp = ""
 #options = Options()
@@ -56,22 +58,25 @@ def reboot():
     driver.implicitly_wait(delay_time)
 
     # Get the html element of the button reboot of type = submit
+
     NEXT_BUTTON_XPATH = '//input[@type="submit" and @value="Reboot"]'
     
     # Click Action of the Reboot Button on the basic page /RgSetup.asp
+
     button = driver.find_element("xpath",NEXT_BUTTON_XPATH)
     button.click()
 
+    WebDriverWait(driver, 10).until(EC.alert_is_present())
+    #driver.switch_to.alert.accept()
+
+
     driver.implicitly_wait(delay_time)
     #Close browser
-    driver.close()
+    driver.quit()
 
     # Get current time for the log
     current_date = datetime.datetime.now()
     report('reboot',current_date)
-
-
-
 
 
 
