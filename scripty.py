@@ -14,7 +14,7 @@ var_ip = '192.168.1.1'
 
 hours_to_apply_reboot = ['7:0:0','13:20:0','20:2:0']
 
-hours_to_apply_reset = ['5:0:0','5:0:0']
+hours_to_apply_reset = ['5:0:0','6:0:0']
 
 delay_time = 3600
 
