@@ -93,7 +93,7 @@ def perform_action(action):
          # Click Action of the Reboot Button on the basic page /RgSetup.asp
 
         button = driver.find_element("xpath",REBOOT_BUTTON_XPATH)
-       # button.click()
+        button.click()
   
         # Handle Alert of rebooting
 
@@ -133,7 +133,7 @@ def perform_action(action):
     # Get current time for the log
     current_date = datetime.datetime.now()
 
-    print (f"{bcolors.OKGREEN} Finished performing {action}.... {bcolors.ENDC}")
+    print(f"{bcolors.OKGREEN} Finished performing {action}.... {bcolors.ENDC}")
     
     # action argument is either reboot or reset
     report(action,current_date)
