@@ -1,5 +1,6 @@
 from selenium import webdriver
 #from selenium.webdriver.common.keys import Keys
+import sys
 import datetime
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -14,7 +15,7 @@ var_ip = '192.168.1.1'
 
 hours_to_apply_reboot = ['7:0:0','13:20:0','20:2:0']
 
-hours_to_apply_reset = ['5:0:0','6:0:0']
+hours_to_apply_reset = ['3:0:0','4:0:0','5:0:0','6:0:0']
 
 delay_time = 3600
 
@@ -24,6 +25,12 @@ previous_timestamp = ""
 #options.add_argument("start-maximized")
 #serv = Service(path)
 #driver = webdriver.Firefox(service=serv, options=options)
+
+def help_menu():
+    print("Available Arguments:\n")
+    print("(n) now  - Performs the execution of the script now\n")
+    print("(a) auto - Performs the execution of the script in the specified times")
+
 
 def report(action,current_time):
     f = open("logs/reboopy.log", "a")
@@ -113,32 +120,40 @@ def perform_action(action):
     report(action,current_date)
 
 
+try:
+    execution_type = sys.argv[1]
 
-while True:
+    if execution_type == "n" or execution_type == "now":
+        perform_action("reboot")
+    elif execution_type == "a" or execution_type == "auto":
 
-    HOUR        = datetime.datetime.now().hour   # the current hour
-    MINUTE      = datetime.datetime.now().minute # the current minute
-    SECONDS     = datetime.datetime.now().second #the current second
-    MILISECONDS     = datetime.datetime.now().microsecond #the current second
+        while True:
 
-   # print(HOUR, MINUTE, SECONDS)
+            HOUR        = datetime.datetime.now().hour   # the current hour
+            MINUTE      = datetime.datetime.now().minute # the current minute
+            SECONDS     = datetime.datetime.now().second #the current second
+            MILISECONDS     = datetime.datetime.now().microsecond #the current second
 
-    current_timestamp = str(HOUR) + ':' + str(MINUTE) + ':'+ str(SECONDS)
-    
-    if current_timestamp != previous_timestamp:
+        # print(HOUR, MINUTE, SECONDS)
 
-        if (MINUTE in [0,15,25,30,45,55]) and (SECONDS in [0]):
-            print(current_timestamp)
+            current_timestamp = str(HOUR) + ':' + str(MINUTE) + ':'+ str(SECONDS)
+            
+            if current_timestamp != previous_timestamp:
 
-        if current_timestamp in hours_to_apply_reboot:
-            print("Reboot time")
-            perform_action("reboot")
+                if (MINUTE in [0,15,25,30,45,55]) and (SECONDS in [0]):
+                    print(current_timestamp)
 
-        if current_timestamp in hours_to_apply_reset:
-            print("Reset time")
-            perform_action("reset")
-    
-    previous_timestamp = current_timestamp
+                if current_timestamp in hours_to_apply_reboot:
+                    print("Reboot time")
+                    perform_action("reboot")
+
+                if current_timestamp in hours_to_apply_reset:
+                    print("Reset time")
+                    perform_action("reset")
+            
+            previous_timestamp = current_timestamp
+except IndexError:
+    help_menu()
 
 
 
@@ -146,4 +161,4 @@ while True:
 # Quit Browser
 #driver.quit()
 
-d = input("Press any key to exit")
+#d = input("Press any key to exit")
