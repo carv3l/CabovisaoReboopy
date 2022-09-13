@@ -26,6 +26,18 @@ previous_timestamp = ""
 #serv = Service(path)
 #driver = webdriver.Firefox(service=serv, options=options)
 
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
+
 def help_menu():
     print("Available Arguments:\n")
     print("(n) now  - Performs the execution of the script now\n")
@@ -33,6 +45,7 @@ def help_menu():
 
 
 def report(action,current_time):
+    print("Writing Log ...")
     f = open("logs/reboopy.log", "a")
     if action == "reboot":
         f.write("Reboot Performed at: " + str(current_time) + " - For more information on the reboot, see Geckodriver.log on parent folder \n")
@@ -42,10 +55,11 @@ def report(action,current_time):
 
 
 def perform_action(action):
+    print (f"{bcolors.WARNING}Starting to perform action: {bcolors.ENDC}")
     driver = webdriver.Firefox(executable_path="./drivers/geckodriver")
     #driver.implicitly_wait(delay_time)
     driver.get('http://'+var_ip)
-    print ("Alert shows following message: ")
+  #  print ("Alert shows following message: ")
     driver.implicitly_wait(delay_time)
     username = driver.find_element('name','loginUsername')
     driver.implicitly_wait(delay_time)
@@ -74,11 +88,13 @@ def perform_action(action):
 
 
     if(action == "reboot"):
+
+        print (f"{bcolors.FAIL}REBOOTING.... {bcolors.ENDC}")
          # Click Action of the Reboot Button on the basic page /RgSetup.asp
 
         button = driver.find_element("xpath",REBOOT_BUTTON_XPATH)
-        button.click()
-
+       # button.click()
+  
         # Handle Alert of rebooting
 
         WebDriverWait(driver, 10).until(EC.alert_is_present())
@@ -87,6 +103,7 @@ def perform_action(action):
 
 
     if( action == "reset"):
+        print (f"{bcolors.FAIL}RESETTING.... {bcolors.ENDC}")
         # Click Action of the Radio Restore Button on the basic page /RgSetup.asp
 
         button = driver.find_element("xpath",RADIO_BUTTON_XPATH)
@@ -116,6 +133,8 @@ def perform_action(action):
     # Get current time for the log
     current_date = datetime.datetime.now()
 
+    print (f"{bcolors.OKGREEN} Finished performing {action}.... {bcolors.ENDC}")
+    
     # action argument is either reboot or reset
     report(action,current_date)
 
