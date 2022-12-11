@@ -33,11 +33,11 @@ driver = webdriver.Chrome('/usr/lib/chromium-browser/chromedriver')
 
 Finish Bash:
 
-Logs Creation
+ - Logs Creation
 
-Scanning OS
+ - Scanning OS
 
-Scanning Browsers from that OS
+ - Scanning Browsers from that OS
 
-Download Webdriver accordingly
+ - Download Webdriver accordingly
 
