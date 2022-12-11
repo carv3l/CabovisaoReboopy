@@ -13,13 +13,11 @@ from selenium.webdriver.support import expected_conditions as EC
 
 var_ip = '192.168.1.1'
 
-hours_to_apply_reboot = ['3:0:0','4:0:0','5:0:0','6:0:0','7:0:0','13:20:0','20:2:0','1:2:0']
+hours_to_apply_reboot = ['7:0:0','13:20:0','20:2:0']
 
-hours_to_apply_reset =  ['3:0:0','4:0:0','5:0:0','6:0:0','7:0:0']
+hours_to_apply_reset = ['3:0:0','4:0:0','5:0:0','6:0:0']
 
 delay_time = 3600
-#delay_time = 14500 
-
 
 previous_timestamp = ""
 #options = Options()
@@ -58,8 +56,7 @@ def report(action,current_time):
 
 def perform_action(action):
     print (f"{bcolors.WARNING}Starting to perform action: {bcolors.ENDC}")
-#  driver = webdriver.Firefox(executable_path="drivers/geckodriver")  
-    driver = webdriver.Chrome('/usr/lib/chromium-browser/chromedriver')
+    driver = webdriver.Firefox(executable_path="./drivers/geckodriver")
     #driver.implicitly_wait(delay_time)
     driver.get('http://'+var_ip)
   #  print ("Alert shows following message: ")
