@@ -13,9 +13,9 @@ from selenium.webdriver.support import expected_conditions as EC
 
 var_ip = '192.168.1.1'
 
-hours_to_apply_reboot = ['3:0:0','4:0:0','5:0:0','6:0:0','7:0:0','13:20:0','20:2:0','1:2:0']
+hours_to_apply_reboot = [] # ['3:0:0','4:0:0','5:0:0','6:0:0','7:0:0','13:20:0','20:2:0','1:2:0']
 
-hours_to_apply_reset =  ['3:0:0','4:0:0','5:0:0','6:0:0','7:0:0']
+hours_to_apply_reset =  ['1:0:0','2:0:0','3:0:0','4:0:0','5:0:0','6:0:0','7:0:0','13:20:0','20:2:0','23:0:0']
 
 delay_time = 3600
 #delay_time = 14500 
@@ -29,8 +29,6 @@ previous_timestamp = ""
 #driver = webdriver.Firefox(service=serv, options=options)
 
 class bcolors:
-    HEADER = '\033[95m'
-    OKBLUE = '\033[94m'
     OKCYAN = '\033[96m'
     OKGREEN = '\033[92m'
     WARNING = '\033[93m'
@@ -40,23 +38,36 @@ class bcolors:
     UNDERLINE = '\033[4m'
 
 
-def help_menu():
-    print("Available Arguments:\n")
-    print("(n) now  - Performs the execution of the script now\n")
-    print("(a) auto - Performs the execution of the script in the specified times")
+class Automation:
+
+    def __init__(self):
+        self.C_header = '\033[95m'
+        self.C_OK_blue = '\033[94m'
+        self.C_OK_cyan = '\033[96m'
+        self.C_OK_green = '\033[92m'
+        self.C_warning = '\033[93m'
+        self.C_fail = '\033[91m'
+        self.C_end_color = '\033[0m'
+        self.C_bold = '\033[1m'
+        self.C_underline = '\033[4m'
+
+    def help_menu():
+        print("Available Arguments:\n")
+        print("(n) now  - Performs the execution of the script now\n")
+        print("(a) auto - Performs the execution of the script in the specified times")
 
 
-def report(action,current_time):
-    print("Writing Log ...")
-    f = open("logs/reboopy.log", "a")
-    if action == "reboot":
-        f.write("Reboot Performed at: " + str(current_time) + " - For more information on the reboot, see Geckodriver.log on parent folder \n")
-    if action == "reset":
-        f.write("Reset Performed at: " + str(current_time) + " - For more information on the reboot, see Geckodriver.log on parent folder \n")
-    f.close()
+    def report(self,action,current_time):
+        print("Writing Log ...")
+        f = open("logs/reboopy.log", "a")
+        if action == "reboot":
+            f.write("Reboot Performed at: " + str(current_time) + " - For more information on the reboot, see Geckodriver.log on parent folder \n")
+        if action == "reset":
+            f.write("Reset Performed at: " + str(current_time) + " - For more information on the reboot, see Geckodriver.log on parent folder \n")
+        f.close()
 
 
-def perform_action(action):
+def perform_action(self,action):
     print (f"{bcolors.WARNING}Starting to perform action: {bcolors.ENDC}")
 #  driver = webdriver.Firefox(executable_path="drivers/geckodriver")  
     driver = webdriver.Chrome('/usr/lib/chromium-browser/chromedriver')
@@ -136,10 +147,10 @@ def perform_action(action):
     # Get current time for the log
     current_date = datetime.datetime.now()
 
-    print(f"{bcolors.OKGREEN} Finished performing {action}.... {bcolors.ENDC}")
+    print(f"{self.C_OK_green} Finished performing {action}.... {self.C_end_color}")
     
     # action argument is either reboot or reset
-    report(action,current_date)
+    Automation.report(action,current_date)
 
 
 try:
@@ -175,7 +186,7 @@ try:
             
             previous_timestamp = current_timestamp
 except IndexError:
-    help_menu()
+    Automation.help_menu()
 
 
 
