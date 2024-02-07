@@ -5,9 +5,9 @@ import datetime
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 #from datetime import datetime
-#from selenium.webdriver.firefox.options import Options
-#from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
-#from selenium.webdriver.firefox.service import Service
+from selenium.common.exceptions import TimeoutException
+import time
+from selenium.webdriver.common.keys import Keys
 
 
 
@@ -16,8 +16,7 @@ var_ip = '192.168.1.1'
 hours_to_apply_reboot = ['7:0:0','13:20:0','20:2:0']
 
 hours_to_apply_reset = ['3:0:0','4:0:0','5:0:0','6:0:0']
-
-delay_time = 3600
+delay_time = 3 # Seconds
 
 previous_timestamp = ""
 #options = Options()
@@ -40,7 +39,8 @@ class bcolors:
 
 def help_menu():
     print("Available Arguments:\n")
-    print("(n) now  - Performs the execution of the script now\n")
+    print("(n) now  - Performs a REBOOT on the router now\n")
+    print("(r) reset  - Performs a RESET on the router now\n")
     print("(a) auto - Performs the execution of the script in the specified times")
 
 
@@ -56,7 +56,8 @@ def report(action,current_time):
 
 def perform_action(action):
     print (f"{bcolors.WARNING}Starting to perform action: {bcolors.ENDC}")
-    driver = webdriver.Firefox(executable_path="./drivers/geckodriver")
+    service = webdriver.ChromeService(executable_path = '/usr/bin/chromedriver')
+    driver = webdriver.Chrome(service=service)
     #driver.implicitly_wait(delay_time)
     driver.get('http://'+var_ip)
   #  print ("Alert shows following message: ")
@@ -71,7 +72,7 @@ def perform_action(action):
     driver.implicitly_wait(delay_time)
     password.submit()
 
-    driver.implicitly_wait(delay_time)
+    driver.implicitly_wait(3.0)
 
     # Goes to the basic page of the hotbox /RgSetup.asp
     driver.find_element("link text","Basic").click()
@@ -93,12 +94,24 @@ def perform_action(action):
          # Click Action of the Reboot Button on the basic page /RgSetup.asp
 
         button = driver.find_element("xpath",REBOOT_BUTTON_XPATH)
+
+        print (f"button {button}")
+
         button.click()
-  
+
+        time.sleep(5)
+
         # Handle Alert of rebooting
 
-        WebDriverWait(driver, 10).until(EC.alert_is_present())
-        driver.switch_to.alert.accept()
+        try:
+            WebDriverWait(driver, 5).until(EC.alert_is_present())
+            driver.switch_to.alert.accept()
+            #driver.find_element('value','OK').send_keys(Keys.RETURN)         
+        except TimeoutException:
+            print("Alert not found. Move on...")
+        except Exception as e:
+            print(f"Error : {e}")
+            #report(action,current_date)  # Improve This ^^^^^^
 
 
 
@@ -112,7 +125,8 @@ def perform_action(action):
         # Handle Message Alert of resetting
 
         WebDriverWait(driver, 10).until(EC.alert_is_present())
-        driver.switch_to.alert.accept() 
+        driver.switch_to.alert.accept()
+
 
         driver.implicitly_wait(delay_time)
 
@@ -144,6 +158,8 @@ try:
 
     if execution_type == "n" or execution_type == "now":
         perform_action("reboot")
+    if execution_type == "r" or execution_type == "reset":
+        perform_action("reset")
     elif execution_type == "a" or execution_type == "auto":
 
         while True:
