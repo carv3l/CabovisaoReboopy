@@ -7,6 +7,7 @@ from selenium.webdriver.support import expected_conditions as EC
 #from datetime import datetime
 from selenium.common.exceptions import TimeoutException
 import time
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 
 
@@ -99,19 +100,22 @@ def perform_action(action):
 
         button.click()
 
-        time.sleep(5)
-
+       
         # Handle Alert of rebooting
-
+        actions = ActionChains(driver) 
+        
         try:
             WebDriverWait(driver, 5).until(EC.alert_is_present())
             driver.switch_to.alert.accept()
+
+            actions.send_keys(Keys.ENTER)
+            #actions.perform()
             #driver.find_element('value','OK').send_keys(Keys.RETURN)         
         except TimeoutException:
             print("Alert not found. Move on...")
         except Exception as e:
             print(f"Error : {e}")
-            #report(action,current_date)  # Improve This ^^^^^^
+            #report(action,current_date)  # Improve This ^^^^^^    
 
 
 
@@ -126,6 +130,8 @@ def perform_action(action):
 
         WebDriverWait(driver, 10).until(EC.alert_is_present())
         driver.switch_to.alert.accept()
+        
+
 
 
         driver.implicitly_wait(delay_time)
@@ -135,12 +141,13 @@ def perform_action(action):
         button = driver.find_element("xpath",APPLY_BUTTON_XPATH)
         button.click()
 
-    
+
+        
    
     
 
 
-    driver.implicitly_wait(delay_time)
+    time.sleep(10)
     #Close browser
     driver.quit()
 
