@@ -25,14 +25,17 @@ while ok:
 
     print("DAY",WEEKDAY )
 
-    # config.read("test.cfg")
-    # arr_reset = tuple(json.loads(config.get("HOUR", "RESET_HOURS")))
+    config.read("test.cfg")
+    
+    arr_reset = tuple(json.loads(config.get("HOUR", "RESET_HOURS")))
 
     # arr_reboot = tuple(json.loads(config.get("HOUR", "REBOOT_HOURS")))
     arr_weekdays = tuple(json.loads(config.get("WEEK", "WEEK_DAYS")))
 
     if (WEEKDAY in arr_weekdays):
-        print("MATCH, resetting....")
+        print("HOUR", HOUR)
+        if (str(HOUR) in arr_reset):
+            print("MATCH, resetting....")
     time.sleep(1)
 
 
