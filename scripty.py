@@ -9,14 +9,13 @@ from selenium.common.exceptions import TimeoutException
 import time
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
+from configparser import ConfigParser
+import json
 
-
+config = ConfigParser()
 
 var_ip = '192.168.1.1'
 
-hours_to_apply_reboot = ['7:0:0','13:20:0','20:2:0']
-
-hours_to_apply_reset = ['3:0:0','4:0:0','5:0:0','6:0:0']
 delay_time = 3 # Seconds
 
 previous_timestamp = ""
@@ -141,12 +140,6 @@ def perform_action(action):
         button = driver.find_element("xpath",APPLY_BUTTON_XPATH)
         button.click()
 
-
-        
-   
-    
-
-
     time.sleep(10)
     #Close browser
     driver.quit()
@@ -175,25 +168,37 @@ try:
             MINUTE      = datetime.datetime.now().minute # the current minute
             SECONDS     = datetime.datetime.now().second #the current second
             MILISECONDS     = datetime.datetime.now().microsecond #the current second
+            WEEKDAY = datetime.datetime.now().weekday()
+
+            config.read("test.cfg")
+
+            hours_to_apply_reset = tuple(json.loads(config.get("HOUR", "RESET_HOURS")))
+            hours_to_apply_reboot = tuple(json.loads(config.get("HOUR", "REBOOT_HOURS")))
+            arr_weekdays = tuple(json.loads(config.get("WEEK", "WEEK_DAYS")))
+            arr_print_min = tuple(json.loads(config.get("MINUTE", "PRINT_MINUTES")))
 
         # print(HOUR, MINUTE, SECONDS)
 
             current_timestamp = str(HOUR) + ':' + str(MINUTE) + ':'+ str(SECONDS)
             
-            if current_timestamp != previous_timestamp:
+            if (WEEKDAY in arr_weekdays):
+                print("DAY IS VALID")
+                if current_timestamp != previous_timestamp:
 
-                if (MINUTE in [0,15,25,30,45,55]) and (SECONDS in [0]):
-                    print(current_timestamp)
+                    if (MINUTE in arr_print_min ) and (SECONDS in [0]):
+                        print(current_timestamp)
 
-                if current_timestamp in hours_to_apply_reboot:
-                    print("Reboot time")
-                    perform_action("reboot")
+                    if current_timestamp in hours_to_apply_reboot:
+                        print("Reboot time")
+                        perform_action("reboot")
 
-                if current_timestamp in hours_to_apply_reset:
-                    print("Reset time")
-                    perform_action("reset")
-            
-            previous_timestamp = current_timestamp
+                    if current_timestamp in hours_to_apply_reset:
+                        print("Reset time")
+                        perform_action("reset")
+                    
+                    time.sleep(30)            
+
+                previous_timestamp = current_timestamp
 except IndexError:
     help_menu()
 

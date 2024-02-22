@@ -13,9 +13,7 @@ def test1():
     print("OK")
 
 
-ok = True
-
-while ok:
+while True:
 
     HOUR = datetime.datetime.now().hour   # the current hour
     MINUTE = datetime.datetime.now().minute # the current minute
